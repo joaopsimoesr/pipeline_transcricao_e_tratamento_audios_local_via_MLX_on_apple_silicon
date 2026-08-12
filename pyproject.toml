@@ -7,7 +7,11 @@ authors = [
 ]
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.14"
+# Limite superior é proposital: torch (dependência transitiva de whispermlx →
+# pyannote.audio, usada na diarização) ainda não publica wheels para cp314.
+# Sem este teto, `uv sync` tenta resolver um lock universal (todas as extras,
+# mesmo as não selecionadas) e falha em Python 3.14 mesmo sem pedir diarização.
 dependencies = [
     "mlx-whisper",
     "mlx-lm",

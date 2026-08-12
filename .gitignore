@@ -19,7 +19,9 @@ venv/
 .antigravity/
 
 # Dados pessoais/de terceiros — nunca versionar
-audios/
+audios/*
+!audios/.gitkeep
+!audios/README.md
 textos/
 markdown/
 *.mp3
@@ -27,6 +29,7 @@ markdown/
 *.m4a
 *.opus
 *.aac
+*.qta
 transcricoes/
 
 # Modelos e cache de Hugging Face / MLX
