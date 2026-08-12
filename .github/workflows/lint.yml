@@ -1,0 +1,21 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Rodar ShellCheck
+        run: shellcheck src/transcrever.sh

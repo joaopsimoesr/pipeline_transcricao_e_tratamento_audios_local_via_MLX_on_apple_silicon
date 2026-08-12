@@ -1,0 +1,40 @@
+[project]
+name = "transcricao-mlx"
+version = "0.1.0"
+description = "Pipeline local de transcrição e pós-processamento de áudio via MLX (Apple Silicon) — prova de conceito de IA soberana, parte do portfólio técnico da Leginova."
+authors = [
+    { name = "João Pedro Simões Rodrigues" }
+]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "mlx-whisper",
+    "mlx-lm",
+]
+
+# Nota: as dependências acima são deixadas sem pin de versão de propósito.
+# Rode `uv sync` (ou `uv add mlx-whisper mlx-lm`) para que o uv resolva e
+# registre as versões atuais no uv.lock — não fixe versões aqui sem antes
+# confirmar quais estão disponíveis no PyPI no momento da instalação.
+
+[project.optional-dependencies]
+diarizacao = [
+    "whispermlx",
+]
+# Instale com: uv sync --extra diarizacao
+# Requer também: conta na Hugging Face + token (HF_TOKEN) + aceitar os termos
+# de https://huggingface.co/pyannote/speaker-diarization-community-1
+
+[project.urls]
+Homepage = "https://github.com/joaopsimoesr/pipeline_transcricao_e_tratamento_audios_local_via_MLX_on_apple_silicon"
+Leginova = "https://leginova.org"
+
+[dependency-groups]
+dev = [
+    "ruff",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

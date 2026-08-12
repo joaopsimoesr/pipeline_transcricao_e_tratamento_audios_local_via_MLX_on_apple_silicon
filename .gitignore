@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# uv
+# (uv.lock DEVE ser versionado — não incluir aqui)
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+.antigravity/
+
+# Dados pessoais/de terceiros — nunca versionar
+audios/
+textos/
+markdown/
+*.mp3
+*.wav
+*.m4a
+*.opus
+*.aac
+transcricoes/
+
+# Modelos e cache de Hugging Face / MLX
+models/
+.cache/
+*.npz
+*.safetensors
