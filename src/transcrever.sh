@@ -106,24 +106,31 @@ if [ "$DIARIZAR" -eq 1 ]; then
     exit 3
   fi
 
-  JSON_DIARIZADO="$DIR_TEXTOS/${NOME_SAFE}.diarizado.json"
+  # Nome do JSON de saída: whispermlx não tem flag para customizar o nome —
+  # ele nomeia sozinho a partir do basename do áudio de entrada (confirmado
+  # via --help, que não lista --output_name).
+  AUDIO_BASENAME=$(basename "$AUDIO_PATH")
+  AUDIO_STEM="${AUDIO_BASENAME%.*}"
+  JSON_DIARIZADO="$DIR_TEXTOS/${AUDIO_STEM}.json"
 
-  # [PROVAVELMENTE INCOMPLETO - POC] Flags de saída (--output_format,
-  # --output_dir, --output_name) seguem a convenção do WhisperX original, mas
-  # não foram confirmadas nesta versão específica do whispermlx. Rode
-  # `whispermlx --help` antes do primeiro uso e ajuste se os nomes divergirem.
   WHISPERMLX_FLAGS=(--model "$MODEL_WHISPER_DIARIZACAO" --diarize --hf_token "$HF_TOKEN" \
-    --output_format json --output_dir "$DIR_TEXTOS" --output_name "${NOME_SAFE}.diarizado")
+    --output_format json --output_dir "$DIR_TEXTOS")
   if [ "$IDIOMA" != "auto" ]; then
     WHISPERMLX_FLAGS+=(--language "$IDIOMA")
   fi
+  if [ -n "$PROMPT_INICIAL" ]; then
+    WHISPERMLX_FLAGS+=(--initial_prompt "$PROMPT_INICIAL")
+  fi
+  # Anti-alucinação, mesmo padrão do fluxo sem diarização (v0.1.1):
+  WHISPERMLX_FLAGS+=(--condition_on_previous_text False)
+  WHISPERMLX_FLAGS+=(--no_speech_threshold 0.6 --logprob_threshold -1.0 --compression_ratio_threshold 2.4)
 
   whispermlx "$AUDIO_PATH" "${WHISPERMLX_FLAGS[@]}"
 
   if [ ! -f "$JSON_DIARIZADO" ]; then
-    echo "✗ JSON diarizado não foi gerado como esperado em $JSON_DIARIZADO"
-    echo "  Confira o nome real do arquivo gerado (rode 'ls \"$DIR_TEXTOS\"') e"
-    echo "  ajuste as flags --output_dir/--output_name acima, se necessário."
+    echo "✗ JSON diarizado não encontrado em: $JSON_DIARIZADO"
+    echo "  Confira o nome real gerado:"
+    ls -la "$DIR_TEXTOS"/*.json 2>/dev/null || echo "  (nenhum .json encontrado em $DIR_TEXTOS)"
     exit 1
   fi
 

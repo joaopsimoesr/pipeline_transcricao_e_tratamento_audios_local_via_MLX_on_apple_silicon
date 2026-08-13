@@ -39,6 +39,12 @@ dev = [
     "ruff",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.uv]
+package = false
+# Este projeto é uma coleção de scripts (bash + Python), não uma biblioteca
+# instalável — não há um diretório "transcricao_mlx/" para empacotar. Sem
+# esta linha, `uv sync` tenta construir um wheel via hatchling e falha com
+# "Unable to determine which files to ship inside the wheel", porque não
+# existe pacote nenhum para construir. `package = false` diz ao uv para só
+# resolver e instalar as dependências declaradas, sem tentar empacotar o
+# próprio projeto.
